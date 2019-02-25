@@ -1,21 +1,34 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {Component} from 'react';
+import {createStackNavigator, createAppContainer} from 'react-navigation';
+import {Root} from 'native-base';
+import {Provider} from 'react-redux';
 
-export default class App extends React.Component {
+import createDataStore from './configs/createDataStore';
+const store = createDataStore();
+import HomeScreen from './screens/HomeScreen';
+import NewsListScreen from './screens/NewsListScreen';
+import {StatusBar} from 'react-native';
+
+const AppNavigator = createStackNavigator({
+  Home: HomeScreen,
+  NewsList: NewsListScreen,
+});
+
+const AppContainer = createAppContainer(AppNavigator);
+
+// store.subscribe(() => {
+//   console.log(store.getState());
+// });
+
+export default class App extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-      </View>
+      <Provider store={store}>
+        <Root>
+          <StatusBar barStyle="light-content" />
+          <AppContainer />
+        </Root>
+      </Provider>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
