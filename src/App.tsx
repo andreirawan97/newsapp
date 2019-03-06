@@ -8,11 +8,18 @@ const store = createDataStore();
 import HomeScreen from './screens/HomeScreen';
 import NewsListScreen from './screens/NewsListScreen';
 import {StatusBar} from 'react-native';
+import NewsScreen from './screens/NewsScreen';
 
-const AppNavigator = createStackNavigator({
-  Home: HomeScreen,
-  NewsList: NewsListScreen,
-});
+const AppNavigator = createStackNavigator(
+  {
+    Home: HomeScreen,
+    NewsList: NewsListScreen,
+    NewsDetail: NewsScreen,
+  },
+  {
+    mode: 'card',
+  },
+);
 
 const AppContainer = createAppContainer(AppNavigator);
 

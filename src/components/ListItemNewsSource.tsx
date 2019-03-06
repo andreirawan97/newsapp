@@ -21,18 +21,23 @@ class ListItemNewsSource extends Component<Props> {
   render() {
     let {newsSource} = this.props;
     return (
-      <View style={styles.container}>
+      <View>
         {newsSource.length === 0 ? (
-          <ActivityIndicator size="large" style={{marginTop: 50}} />
+          <ActivityIndicator
+            size="large"
+            style={{marginTop: 50, backgroundColor: PRIMARY_COLOR}}
+          />
         ) : (
-          newsSource.map((source: NewsSource, i) => (
-            <ListItem
-              key={i}
-              id={source.id}
-              title={source.name}
-              goToNewsListScreen={this.props.goToNewsListScreen}
-            />
-          ))
+          <View style={styles.container}>
+            {newsSource.map((source: NewsSource, i) => (
+              <ListItem
+                key={i}
+                id={source.id}
+                title={source.name}
+                goToNewsListScreen={this.props.goToNewsListScreen}
+              />
+            ))}
+          </View>
         )}
       </View>
     );

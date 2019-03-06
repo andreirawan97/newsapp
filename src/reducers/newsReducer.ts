@@ -30,6 +30,12 @@ export default function newsReducer(newsState: NewsState, action: Action) {
         newsList: action.payload,
       };
     }
+    case 'CLEAR_NEWS_LIST': {
+      return {
+        ...newsState,
+        newsList: [],
+      };
+    }
     default: {
       return newsState;
     }

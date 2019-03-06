@@ -1,17 +1,19 @@
 //import liraries
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Button} from 'react-native';
+import {View, Text, StyleSheet, Button, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
+import {NavigationScreenProps, NavigationParams} from 'react-navigation';
 
 import {SECONDARY_COLOR} from '../constants/color';
-import {NavigationScreenOptions, NavigationParams} from 'react-navigation';
 import {State, NewsSource, News} from '../Type';
+import NewsCard from '../components/NewsCard';
 
 // create a component
-type Props = NavigationScreenOptions & {
+type Props = NavigationScreenProps & {
   currentNewsSource: NewsSource;
   newsList: Array<News>;
   fetchNewsList: (source: string) => void;
+  clearNewsList: () => void;
 };
 
 class NewsListScreen extends Component<Props> {
@@ -24,15 +26,16 @@ class NewsListScreen extends Component<Props> {
       headerTitleStyle: {
         color: 'white',
       },
-      headerLeft: (
-        <View style={{marginLeft: 20}}>
-          <Button
-            onPress={() => navigation.goBack()}
-            title="Back"
-            color="#fff"
-          />
-        </View>
-      ),
+      headerTintColor: 'white',
+      // headerLeft: (
+      //   <View style={{marginLeft: 20}}>
+      //     <Button
+      //       onPress={() => navigation.goBack()}
+      //       title="Close"
+      //       color="#fff"
+      //     />
+      //   </View>
+      // ),
     };
   };
 
@@ -40,26 +43,44 @@ class NewsListScreen extends Component<Props> {
     this.props.fetchNewsList(this.props.currentNewsSource.id);
   }
 
-  componentWillUnmount() {}
+  componentWillUnmount() {
+    this.props.clearNewsList();
+  }
 
   render() {
     let {newsList} = this.props;
     return (
-      <View style={styles.container}>
-        {newsList.map((news: News, i) => (
-          <Text key={i}>{news.title}</Text>
-        ))}
-      </View>
+      <ScrollView>
+        <View style={styles.container}>
+          {newsList.map((news: News, i) => (
+            <NewsCard
+              key={i}
+              newsTitle={news.title}
+              newsDescription={news.description}
+              newsThumbnail={news.urlToImage}
+              newsUrl={news.url}
+              goToNewsDetail={this._goToNewsDetail}
+            />
+          ))}
+        </View>
+      </ScrollView>
     );
   }
+
+  _goToNewsDetail = ({title, url}: {title: string; url: string}) => {
+    this.props.navigation.navigate('NewsDetail', {
+      title: title,
+      url: url,
+    });
+  };
 }
 
 // define your styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
     backgroundColor: 'whitesmoke',
   },
 });
@@ -78,6 +99,9 @@ function mapDispatchToProps(dispatch: any) {
   return {
     fetchNewsList: (source: string) => {
       dispatch({type: 'FETCH_NEWS_LIST_REQUEST', payload: source});
+    },
+    clearNewsList: () => {
+      dispatch({type: 'CLEAR_NEWS_LIST'});
     },
   };
 }

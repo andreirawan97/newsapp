@@ -42,4 +42,7 @@ export type Action =
   | {
       type: 'UPDATE_NEWS_SOURCE';
       payload: string;
+    }
+  | {
+      type: 'CLEAR_NEWS_LIST';
     };
